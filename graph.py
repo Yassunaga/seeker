@@ -1,7 +1,6 @@
 from math import inf
 
 class Graph:
-
     def __init__(self, size = None):
         self.graph = []
         if size is None:
@@ -11,8 +10,23 @@ class Graph:
             for j in range(size):
                 self.graph[i].append(0)
 
-    def teste():
-        return "Teste"
+    def matrix_to_object(matrix_graph, remove_infinite):
+        size = len(matrix_graph[0])
+        graph = {
+            "size": size,
+            "arcList" : []
+        }
+        for i in range(size):
+            for j in range(size):
+                arco = {
+                    "inicio" : i,
+                    "fim" : j,
+                    "peso" : matrix_graph[i][j]
+                }
+                if arco["peso"] == inf and remove_infinite == True:
+                    continue
+                graph["arcList"].append(arco)
+        return graph
 
     # Create a graph NxN according to size
     def create_graph(size):
@@ -119,3 +133,27 @@ class Graph:
                         dist[i][j] = dist[i][k] + dist[k][j]
                         path_matrix[i][j] = path_matrix[i][k] + path_matrix[k][j]
         return dist, path_matrix
+
+    def lines_to_graph_matrix(readed_lines):
+        lines = []
+        for i in readed_lines:
+            lines.append(i.split())
+        size = len(lines[0])
+        grafo = []
+        for i in range(size):
+            grafo.append([])
+            for j,element in enumerate(lines[i]):
+                if element == 'inf':
+                    grafo[i].append(inf)
+                elif element == '\n':
+                    continue
+                else:
+                    grafo[i].append(int(element))
+        return grafo
+    
+    def graph_from_file(self, file_name):
+        inputGraph_file = open(file_name, "r")
+        read = inputGraph_file.readlines()
+        inputGraph_file.close()
+        graph = self.lines_to_graph_matrix(read)
+        return graph
