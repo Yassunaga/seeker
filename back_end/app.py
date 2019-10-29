@@ -2,11 +2,13 @@ from flask import Flask
 from flask import request
 from datetime import datetime
 from graph import Graph
+from flask_cors import CORS
 from math import inf
 import json
 import re
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/graph/")
 def grafos():
@@ -20,7 +22,7 @@ def getGraph(remove_infinite):
     graph = Graph.graph_from_file(Graph, "inputGraph.txt")
     graph = Graph.matrix_to_object(graph,remove_infinite)
     response = {
-        0: graph
+        "responseGraph": graph
     }
     return response
 
