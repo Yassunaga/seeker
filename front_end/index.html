@@ -7,6 +7,7 @@
 </head>
 
 <body>
+
     <script src="jquery.min.js"></script>
     <script src="arbor-tween.js"></script>
     <script src="arbor.js"></script>
@@ -139,16 +140,12 @@
                 return that
             }
 
-            function tratarRetorno(){
-
-            }
-
             $(document).ready(function () {
                 var graph = arbor.ParticleSystem(100, 600, 0.8) // create the system with sensible repulsion/stiffness/friction
                 graph.parameters({ gravity: false, fixed: true }) // use center-gravity to make the graph settle nicely (ymmv)
                 graph.renderer = Renderer("#viewport") // our newly created renderer will have its .init() method called shortly by sys...
                 
-                $.get('http://127.0.0.1:5000/graph', tratarRetorno);
+                
 
                 // add some nodes to the graph and watch it go...
                 graph.addEdge('a', 'b')
@@ -176,6 +173,14 @@
         })(this.jQuery)
 
     </script>
+    
+    <script>
+        function tratarRetorno(){
+            window.x = $.get('http://127.0.0.1:5000/graph/clean');
+            console.log(x.responseText);
+        }
+    </script>
+    <button onclick="tratarRetorno()">Get Graph</button>
 </body>
 
 </html>
