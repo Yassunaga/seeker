@@ -10,6 +10,8 @@ import re
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/nodes/")
+
 @app.route("/graph/")
 def grafos():
     return getGraph(False)
@@ -21,8 +23,9 @@ def grafoLimpo():
 def getGraph(remove_infinite):
     graph = Graph.graph_from_file(Graph, "inputGraph.txt")
     graph = Graph.matrix_to_object(graph,remove_infinite)
+    print(graph)
     response = {
-        "responseGraph": graph
+        "graph": graph
     }
     return response
 
