@@ -27,20 +27,3 @@ def getGraph(remove_infinite):
         "nodes" : nodes
     }
     return response
-
-# @app.route("/grafos/<size>")
-# def grafo(size):
-#     size = int(size)
-#     path = Graph.create_path_matrix(size)
-#     graph = Graph.create_graph(size)
-#     graph,y = Graph.mock_distances(graph, path)
-#     dist,x = Graph.floyd_warshall(graph, path)
-#     for i in range(5):
-#         for j in range(5):
-#             if dist[i][j] == inf: 
-#                 dist[i][j] = 0
-#     retorno = {
-#         0: dist,
-#         1: graph
-#     }
-#     return retorno 
