@@ -160,3 +160,13 @@ class Graph:
         # inputGraph_file.close()
         graph = self.lines_to_graph_matrix(lines)
         return graph
+    
+    def nodes_from_file(self, file_name):
+        with open(file_name, "r") as file:
+            lines = file.readlines()
+        nodes = []
+        size = 0
+        for line in lines:
+            nodes.append(size)
+            size += 1
+        return nodes
