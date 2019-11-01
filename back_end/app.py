@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import g
+from util import Util
 from datetime import datetime
 from graph import Graph
 from flask_cors import CORS
@@ -12,8 +13,9 @@ import re
 dbTextFile = "inputGraph.txt"
 
 #Pre-processing
-graph = Graph.graph_from_file(Graph, dbTextFile)
-nodes = Graph.nodes_from_file(Graph, dbTextFile)
+graph = Util.graph_from_file(Graph, dbTextFile)
+nodes = Util.nodes_from_file(Graph, dbTextFile)
+path_matrix = Util.paths_from_file(Graph, dbTextFile)
 
 app = Flask(__name__)
 CORS(app)
@@ -26,10 +28,12 @@ def grafos():
 def grafoLimpo():
     return getGraph(True)
 
+@app.route("/paths/")
+def paths():
+    return path_matrix
+
 def getGraph(remove_infinite):
-    # path = Graph.paths_from_file(Graph, dbTextFile)
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
-    # path = Graph.create_path_matrix(raph.size)
     response = {
         "graph": graphResp,
         "nodes" : nodes

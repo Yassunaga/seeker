@@ -112,7 +112,7 @@ class Graph:
         graph_matrix[4][1] = 2
         return graph_matrix, path_matrix
 
-    def floyd_warshall(self,graph_matrix, path_matrix):
+    def floyd_warshall(self,graph_matrix,path_matrix):
         dist = []
         size = len(graph_matrix)
         # Inicializa a matriz de distâncias com 0
@@ -131,72 +131,3 @@ class Graph:
                         dist[i][j] = dist[i][k] + dist[k][j]
                         path_matrix[i][j] = path_matrix[i][k] + path_matrix[k][j]
         return dist, path_matrix
-
-    def lines_to_graph_matrix(readed_lines):
-        lines = []
-        for i in readed_lines:
-            lines.append(i.split())
-        size = len(lines[0])
-        grafo = []
-        for i in range(size):
-            grafo.append([])
-            for j,element in enumerate(lines[i]):
-                if element == 'inf':
-                    grafo[i].append(inf)
-                elif element == '\n':
-                    continue
-                else:
-                    grafo[i].append(int(element))
-        return grafo
-    
-    # def lines_to_path_matrix(readed_lines):
-        # lines = []
-        # for i in readed_lines:
-        #     lines.append([i.split()])            
-        # size = len(lines[0])
-        # path = []
-        # for i in range(size):
-        #     path.append([])
-        #     for j, element in enumerate(lines[i]):
-                
-        # path = []
-        # for i in range(size):
-        #     path.append([])
-        #     for j in range(size):
-        #         if i == j:
-        #             path[i].append(0)
-        #         path[i].append(None)
-        # return path
-        # path_matrix[1][2] = [2]
-
-    def graph_from_file(self, file_name):
-        with open(file_name , "r") as file:
-            lines = file.readlines()
-        file.close()
-        # inputGraph_file = open(file_name, "r")
-        # read = inputGraph_file.readlines()
-        # inputGraph_file.close()
-        graph = self.lines_to_graph_matrix(lines)
-        return graph
-    
-    def nodes_from_file(self, file_name):
-        with open(file_name, "r") as file:
-            lines = file.readlines()
-        nodes = []
-        size = 0
-        for line in lines:
-            nodes.append(size)
-            size += 1
-        return nodes
-
-    def paths_from_file(self, file_name):
-        with open(file_name, "r") as file:
-            lines = file.readlines()
-        path = self.lines_to_path_matrix(lines)
-        return path
-
-    def printGraph(self, graph, size):
-        for i in range(size):
-            for j in range(size):
-                print(graph[i][j], end=" ")
-            print()
