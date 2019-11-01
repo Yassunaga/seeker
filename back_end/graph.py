@@ -1,4 +1,5 @@
 from math import inf
+from flask import g
 
 class Graph:
     def __init__(self, size = None):
@@ -111,7 +112,7 @@ class Graph:
         graph_matrix[4][1] = 2
         return graph_matrix, path_matrix
 
-    def floyd_warshall(graph_matrix, path_matrix):
+    def floyd_warshall(self,graph_matrix, path_matrix):
         dist = []
         size = len(graph_matrix)
         # Inicializa a matriz de distâncias com 0
@@ -119,9 +120,6 @@ class Graph:
             dist.append([])
             for j in range(size):
                 dist[i].append(0)
-                
-                # print(dist[i][j], end=" ")
-            # print()
         for i in range(size):
             for j in range(size):
                 if graph_matrix[i][j] != 0:
@@ -151,6 +149,26 @@ class Graph:
                     grafo[i].append(int(element))
         return grafo
     
+    # def lines_to_path_matrix(readed_lines):
+        # lines = []
+        # for i in readed_lines:
+        #     lines.append([i.split()])            
+        # size = len(lines[0])
+        # path = []
+        # for i in range(size):
+        #     path.append([])
+        #     for j, element in enumerate(lines[i]):
+                
+        # path = []
+        # for i in range(size):
+        #     path.append([])
+        #     for j in range(size):
+        #         if i == j:
+        #             path[i].append(0)
+        #         path[i].append(None)
+        # return path
+        # path_matrix[1][2] = [2]
+
     def graph_from_file(self, file_name):
         with open(file_name , "r") as file:
             lines = file.readlines()
@@ -170,3 +188,15 @@ class Graph:
             nodes.append(size)
             size += 1
         return nodes
+
+    def paths_from_file(self, file_name):
+        with open(file_name, "r") as file:
+            lines = file.readlines()
+        path = self.lines_to_path_matrix(lines)
+        return path
+
+    def printGraph(self, graph, size):
+        for i in range(size):
+            for j in range(size):
+                print(graph[i][j], end=" ")
+            print()
