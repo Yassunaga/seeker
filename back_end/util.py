@@ -62,9 +62,17 @@ class Util:
                 if element != 'inf' and i != j:
                     path[i][j] = [j]
         warshall_graph, warshall_path = Graph.floyd_warshall(Graph,graph, path)
+        return warshall_path
 
     def printGraph(self, graph, size):
         for i in range(size):
             for j in range(size):
                 print(graph[i][j], end=" ")
             print()
+
+    def none_to_null(self, matrix):
+        size = len(matrix[0])
+        for i in range(size):
+            for j in range(size):
+                if matrix[i][j] == None:
+                    matrix[i][j] = "null"
