@@ -21,6 +21,67 @@
 <body>
     <div id="cy"></div>
     <script>
+        window.set = new Set();
+
+        function initCriminal(quantity) {
+            if (isGraphFull()) {
+                return;
+            }
+            while (quantity > 0) {
+                quantity--;
+                var position = getRandomPosition();
+                window.criminal = {
+                    id: 'crim',
+                    position: position
+                }
+                console.log("Criminal position: " + position);
+                cy.style()
+                    .selector('#' + position)
+                    .style({
+                        'background-color': 'red'
+                    })
+                    .update();
+            }
+        }
+        function initPolice(quantity) {
+            if (isGraphFull()) {
+                return;
+            }
+            while (quantity > 0) {
+                quantity--;
+                position = getRandomPosition();
+                set.add(position);
+                window.police = {
+                    id: 'police',
+                    position: position
+                }
+                console.log("Police position: " + position);
+                cy.style()
+                    .selector('#' + position)
+                    .style({
+                        'background-color': 'blue'
+                    })
+                    .update();
+            }
+        }
+        function getRandomPosition() {
+            var position;
+            do {
+                position = Math.floor((Math.random() * responseNodes.length));
+            }
+            while (set.has(position));
+            set.add(position);
+            return position
+        }
+
+        function isGraphFull() {
+            if (set.size >= responseNodes.length) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         jQuery.ajax({
             url: 'http://127.0.0.1:5000/graph/clean',
             success: function (result) {
@@ -41,8 +102,8 @@
                             {
                                 data: {
                                     id: data_id,
-                                    source : edge.begin.toString(),
-                                    target : edge.end.toString()
+                                    source: edge.begin.toString(),
+                                    target: edge.end.toString()
                                 }
                             }
                         );
@@ -50,27 +111,23 @@
                 });
                 window.cy = cytoscape({
                     container: document.getElementById('cy'),
-                    elements : responseElements,
-                    layout: {
-                        name: 'breadthfirst',
-                        directed: true,
-                        roots: '#1',
-                        padding: 10
-                    },
-                    style : [
+                    elements: responseElements,
+                    style: [
                         {
-                            selector : '#1',
-                            style : {
-                                'label' : 'data(id)',
-                                shape : 'ellipse',
-                                'background-color' : 'red'
+                            selector: 'node',
+                            style: {
+                                'label': 'data(id)',
+                                shape: 'ellipse',
                             },
                         }
                     ]
                 });
-            
+
+
+
+                initCriminal(1);
+                initPolice(2);
                 //Inserir código a partir daqui
-                
             }
         });
     </script>
