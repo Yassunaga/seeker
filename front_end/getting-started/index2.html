@@ -1,0 +1,79 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>Tutorial 1: Getting Started</title>
+    <script src="cythoscape.min.js"></script>
+    <script src="jquery.min.js"></script>
+</head>
+
+<style>
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+</style>
+
+<body>
+    <div id="cy"></div>
+    <script>
+        jQuery.ajax({
+            url: 'http://127.0.0.1:5000/graph/clean',
+            success: function (result) {
+                window.responseGraph = result.graph.arcList;
+                window.responseNodes = result.nodes;
+                window.responseElements = [];
+                responseNodes.forEach(node => {
+                    responseElements.push(
+                        {
+                            data: { id: node.toString() }
+                        }
+                    );
+                });
+                responseGraph.forEach(edge => {
+                    if (edge.begin != edge.end) {
+                        var data_id = edge.begin.toString() + edge.end.toString();
+                        responseElements.push(
+                            {
+                                data: {
+                                    id: data_id,
+                                    source : edge.begin.toString(),
+                                    target : edge.end.toString()
+                                }
+                            }
+                        );
+                    }
+                });
+                window.cy = cytoscape({
+                    container: document.getElementById('cy'),
+                    elements : responseElements,
+                    layout: {
+                        name: 'breadthfirst',
+                        directed: true,
+                        roots: '#1',
+                        padding: 10
+                    },
+                    style : [
+                        {
+                            selector : '#1',
+                            style : {
+                                'label' : 'data(id)',
+                                shape : 'ellipse',
+                                'background-color' : 'red'
+                            },
+                        }
+                    ]
+                });
+            
+                //Inserir código a partir daqui
+                
+            }
+        });
+    </script>
+</body>
+
+</html>
