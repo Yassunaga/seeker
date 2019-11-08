@@ -82,6 +82,30 @@
             }
         }
 
+        function placeEdgeLabels() {
+            responseGraph.forEach(edge => {
+                var edge_id = '#' + edge.begin.toString() + '_' + edge.end.toString();
+                cy.style()
+                    .selector(edge_id)
+                    .style({
+                        'label': edge.weight.toString()
+                    }).update();
+            });
+        }
+
+        function animateTransition() {
+            cy.nodes('#1').animate({
+                style: { backgroundColor: 'yellow' }
+            }, {
+                duration: 1000
+            });
+            cy.edges('#2_1').animate({
+                style: { 'line-color': 'yellow' }
+            }, {
+                duration : 1000
+            });
+        }
+
         jQuery.ajax({
             url: 'http://127.0.0.1:5000/graph/clean',
             success: function (result) {
@@ -97,7 +121,7 @@
                 });
                 responseGraph.forEach(edge => {
                     if (edge.begin != edge.end) {
-                        var data_id = edge.begin.toString() + edge.end.toString();
+                        var data_id = edge.begin.toString() + '_' + edge.end.toString();
                         responseElements.push(
                             {
                                 data: {
@@ -122,11 +146,10 @@
                         }
                     ]
                 });
-
-
-
                 initCriminal(1);
                 initPolice(2);
+                placeEdgeLabels();
+                animateTransition();
                 //Inserir código a partir daqui
             }
         });
