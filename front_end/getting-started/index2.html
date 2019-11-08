@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Tutorial 1: Getting Started</title>
+    <title>seeker</title>
     <script src="cythoscape.min.js"></script>
     <script src="jquery.min.js"></script>
 </head>
@@ -93,17 +93,61 @@
             });
         }
 
-        function animateTransition() {
-            cy.nodes('#1').animate({
-                style: { backgroundColor: 'yellow' }
+        // function animateTransition() {
+        //     cy.nodes('#1').animate({
+        //             style: { backgroundColor: 'yellow' }
+        //         }, {
+        //                 duration: 1000
+        //             });
+        //             cy.edges('#2_1').animate({
+        //                     style: { 'line-color': 'yellow' }
+        //                 }, {
+        //                         duration : 1000
+        //                     });
+        //                 }
+
+        function animateTransition(idNode1, idNode2, peso, type){
+            var animDuration = peso * 600;
+            var color = null;
+            if(type == 'police'){
+                color = 'blue';
+            }
+            else if(type == 'crim'){
+                color = 'red';
+            }
+            cy.nodes('#'+idNode1).animate({
+                style: {backgroundColor: 'grey'}
             }, {
-                duration: 1000
-            });
-            cy.edges('#2_1').animate({
-                style: { 'line-color': 'yellow' }
+                    duration: animDuration
+                }
+            );
+
+            console.log(cy.nodes('#'+idNode1));
+            
+
+            cy.edges('#'+idNode1+'_'+idNode2).animate({
+                style: {'line-color': color}
             }, {
-                duration : 1000
-            });
+                duration: animDuration
+                }
+            );
+
+            cy.nodes('#'+idNode2).animate({
+                style: {backgroundColor: color}
+            }, {
+                    duration: animDuration
+                }
+            );
+
+            cy.edges('#'+idNode1+'_'+idNode2).animate({
+                style: {'line-color': 'grey'}
+            }, {
+                duration: animDuration
+                }
+            );
+
+            console.log(cy.edges('#'+idNode1+'_'+idNode2));
+            
         }
 
         jQuery.ajax({
@@ -153,6 +197,7 @@
                 //Inserir código a partir daqui
             }
         });
+
     </script>
 </body>
 
