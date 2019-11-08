@@ -16,7 +16,7 @@ dbTextFile = "inputGraph.txt"
 graph = Util.graph_from_file(Graph, dbTextFile)
 nodes = Util.nodes_from_file(Graph, dbTextFile)
 path_matrix = Util.paths_from_file(Graph, dbTextFile)
-Util.none_to_null(path_matrix)
+Util.none_to_null(Graph, path_matrix)
 app = Flask(__name__)
 CORS(app)
 
@@ -30,11 +30,7 @@ def grafoLimpo():
 
 @app.route("/paths/")
 def paths():
-    return getPaths(False)
-
-@app.route("/paths/clean/")
-def cleanPaths():
-    return getPaths(True)
+    return getPaths()
 
 def getGraph(remove_infinite):
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
@@ -44,5 +40,8 @@ def getGraph(remove_infinite):
     }
     return response
 
-def getPaths(remove_infinite):
-    return remove_infinite
+def getPaths():
+    response = {
+        "path" : path_matrix
+    }
+    return response
