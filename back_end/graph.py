@@ -29,6 +29,20 @@ class Graph:
                 graph["arcList"].append(arco)
         return graph
 
+    def matrix_to_list(matrix_graph, remove_infinite):
+        size = len(matrix_graph[0])
+        graph_list = {}
+        for i in range(size):
+            graph_list[i] = []
+        for i in range(size):
+            for j in range(size):
+                if remove_infinite == True and matrix_graph[i][j] == inf:
+                    continue
+                elif matrix_graph[i][j] > 0:
+                    graph_list[i].append(j)
+                    graph_list[j].append(i)
+        return graph_list
+
     # Create a graph NxN according to size
     def create_graph(size):
         graph = []
@@ -60,57 +74,6 @@ class Graph:
                     graph_matrix[i][j] = random_distance
                     graph_matrix[j][i] = random_distance
         return graph_matrix
-
-    # Create mocked distances for the graph
-    def mock_distances(graph_matrix, path_matrix):
-        # graph_matrix[0][1] = 13
-        # graph_matrix[0][9] = 5
-        # graph_matrix[1][0] = 13
-        # graph_matrix[1][3] = 4
-        # graph_matrix[1][4] = 14
-        # graph_matrix[2][8] = 3
-        # graph_matrix[2][5] = 5
-        # graph_matrix[2][6] = 15
-        # graph_matrix[3][4] = 6
-        # graph_matrix[3][1] = 4
-        # graph_matrix[3][5] = 8
-        # graph_matrix[3][6] = 7
-        # graph_matrix[4][7] = 11
-        # graph_matrix[4][1] = 14
-        # graph_matrix[4][3] = 6
-        # graph_matrix[5][2] = 5
-        # graph_matrix[5][9] = 10
-        # graph_matrix[5][3] = 8
-        # graph_matrix[6][3] = 7
-        # graph_matrix[6][8] = 20
-        # graph_matrix[6][2] = 15
-        # graph_matrix[7][4] = 11
-        # graph_matrix[8][6] = 20
-        # graph_matrix[8][6] = 20
-        # graph_matrix[8][2] = 3
-        # graph_matrix[9][5] = 10 
-        # graph_matrix[9][0] = 5
-        path_matrix[1][2] = [2]
-        graph_matrix[1][2] = 3
-        
-        path_matrix[1][4] = [4]
-        graph_matrix[1][4] = 7
-        
-        path_matrix[2][1] = [1]
-        graph_matrix[2][1] = 8
-
-        path_matrix[2][3] = [3]
-        graph_matrix[2][3] = 2
-
-        path_matrix[3][1] = [1]
-        graph_matrix[3][1] = 5
-
-        path_matrix[3][4] = [4]
-        graph_matrix[3][4] = 1
-
-        path_matrix[4][1] = [1]
-        graph_matrix[4][1] = 2
-        return graph_matrix, path_matrix
 
     def floyd_warshall(self,graph_matrix,path_matrix):
         dist = []

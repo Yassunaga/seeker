@@ -49,10 +49,11 @@
             }
             while (quantity > 0) {
                 quantity--;
+                policeCount++;
                 position = getRandomPosition();
                 set.add(position);
                 window.police = {
-                    id: 'police',
+                    id: 'police' + policeCount.toString(),
                     position: position
                 }
                 console.log("Police position: " + position);
@@ -63,6 +64,7 @@
                     })
                     .update();
             }
+            console.log(policeCount);
         }
         function getRandomPosition() {
             var position;
@@ -93,21 +95,8 @@
             });
         }
 
-        // function animateTransition() {
-        //     cy.nodes('#1').animate({
-        //             style: { backgroundColor: 'yellow' }
-        //         }, {
-        //                 duration: 1000
-        //             });
-        //             cy.edges('#2_1').animate({
-        //                     style: { 'line-color': 'yellow' }
-        //                 }, {
-        //                         duration : 1000
-        //                     });
-        //                 }
-
         function animateTransition(idNode1, idNode2, peso, type){
-            var animDuration = peso * 600;
+            var animDuration = peso * 500;
             var color = null;
             if(type == 'police'){
                 color = 'blue';
@@ -121,9 +110,7 @@
                     duration: animDuration
                 }
             );
-
-            console.log(cy.nodes('#'+idNode1));
-
+            
             cy.edges('#'+idNode1+'_'+idNode2).animate({
                 style: {'line-color': color}
             }, {
@@ -144,17 +131,15 @@
                 duration: animDuration
                 }
             );
-
-            console.log(cy.edges('#'+idNode1+'_'+idNode2));
-            
         }
 
         jQuery.ajax({
-            url: 'http://127.0.0.1:5000/graph/clean',
+            url: 'http://127.0.0.1:5000/graph/clean/',
             success: function (result) {
                 window.responseGraph = result.graph.arcList;
                 window.responseNodes = result.nodes;
                 window.responseElements = [];
+                window.policeCount = 0;
                 responseNodes.forEach(node => {
                     responseElements.push(
                         {
@@ -192,7 +177,8 @@
                 initCriminal(1);
                 initPolice(2);
                 placeEdgeLabels();
-                animateTransition();
+                animateTransition(1,2,5,'police');
+                animateTransition(5,6,3,'police');
                 //Inserir código a partir daqui
             }
         });

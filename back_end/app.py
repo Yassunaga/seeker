@@ -6,6 +6,7 @@ from datetime import datetime
 from graph import Graph
 from flask_cors import CORS
 from math import inf
+from copy import copy
 import json
 import re
 
@@ -16,6 +17,9 @@ dbTextFile = "inputGraph.txt"
 graph = Util.graph_from_file(Graph, dbTextFile)
 nodes = Util.nodes_from_file(Graph, dbTextFile)
 path_matrix = Util.paths_from_file(Graph, dbTextFile)
+dist, floyd = Graph.floyd_warshall(Graph,graph,path_matrix)
+graph_list = Graph.matrix_to_list(graph, True)
+
 Util.none_to_null(Graph, path_matrix)
 app = Flask(__name__)
 CORS(app)
@@ -33,10 +37,17 @@ def paths():
     return getPaths()
 
 def getGraph(remove_infinite):
+    graph_matrix = copy(graph)
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
+    
+    # "graph_matrix" : graph_matrix
+
     response = {
         "graph": graphResp,
-        "nodes" : nodes
+        "graph_list" : graph_list,
+        "nodes" : nodes,
+        "floyd" : floyd,
+        "dist" : dist,     
     }
     return response
 
