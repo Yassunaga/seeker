@@ -22,7 +22,7 @@
     <div id="cy"></div>
     <script>
         window.set = new Set();
-
+        var lastPosition = -1;
         function initCriminal(quantity) {
             if (isGraphFull()) {
                 return;
@@ -95,46 +95,70 @@
             });
         }
 
-        function animateTransition(idNode1, idNode2, peso, type){
+        function animateTransition(idNode1, idNode2, peso, type) {
             var animDuration = peso * 500;
             var color = null;
-            if(type == 'police'){
+            if (type == 'police') {
                 color = 'blue';
             }
-            else if(type == 'crim'){
+            else if (type == 'crim') {
                 color = 'red';
             }
-            cy.nodes('#'+idNode1).animate({
-                style: {backgroundColor: 'grey'}
-            }, {
-                    duration: animDuration
-                }
-            );
-            
-            cy.edges('#'+idNode1+'_'+idNode2).animate({
-                style: {'line-color': color}
+            cy.nodes('#' + idNode1).animate({
+                style: { backgroundColor: 'grey' }
             }, {
                 duration: animDuration
-                }
+            }
             );
 
-            cy.nodes('#'+idNode2).animate({
-                style: {backgroundColor: color}
-            }, {
-                    duration: animDuration
-                }
-            );
-
-            cy.edges('#'+idNode1+'_'+idNode2).animate({
-                style: {'line-color': 'grey'}
+            cy.edges('#' + idNode1 + '_' + idNode2).animate({
+                style: { 'line-color': color }
             }, {
                 duration: animDuration
-                }
+            }
+            );
+
+            cy.nodes('#' + idNode2).animate({
+                style: { backgroundColor: color }
+            }, {
+                duration: animDuration
+            }
+            );
+
+            cy.edges('#' + idNode1 + '_' + idNode2).animate({
+                style: { 'line-color': 'grey' }
+            }, {
+                duration: animDuration
+            }
             );
         }
 
-        function startSeeker(){
+        function createRandomMovement(actualPosition) {
+            var newPosition = position = Math.floor((Math.random() * graph_list[actualPosition].length));
+            return graph_list[actualPosition][newPosition];
+        }
 
+        function moveCriminal() {
+            var pos;
+            var weight;
+            var actualPosition;
+            var newPosition;
+            for (var i = 0; i < 1; i++) {
+                actualPosition = criminal.position;
+                do{
+                    newPosition = createRandomMovement(criminal.position);
+                }while(newPosition == lastPosition);
+                console.log(actualPosition.toString() + '_' + newPosition.toString());
+                if (graph_matrix[actualPosition][newPosition] != 'null') {
+                    weight = graph_matrix[actualPosition[newPosition]];
+                }
+                else if (graph_matrix[newPosition][actualPosition] != 'null') {
+                    weight = graph_matrix[newPosition][actualPosition];
+                }
+                lastPosition = actualPosition;
+                criminal.position = newPosition;
+                animateTransition(actualPosition, newPosition, weight, "crim")
+            }
         }
 
         jQuery.ajax({
@@ -143,7 +167,9 @@
                 window.responseGraph = result.graph.arcList;
                 window.responseNodes = result.nodes;
                 window.graph_matrix = result.graph_matrix;
-                window.
+                window.graph_list = result.graph_list;
+                window.floyd = result.floyd;
+                window.dist = result.dist;
                 window.responseElements = [];
                 window.policeCount = 0;
                 responseNodes.forEach(node => {
@@ -182,10 +208,8 @@
                 });
 
                 initCriminal(1);
-                initPolice(2);
                 placeEdgeLabels();
-                animateTransition(1,2,5,'police');
-                animateTransition(5,6,3,'police');
+                moveCriminal();
                 //Inserir código a partir daqui
             }
         });
