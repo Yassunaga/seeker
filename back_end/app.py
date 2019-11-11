@@ -6,7 +6,7 @@ from datetime import datetime
 from graph import Graph
 from flask_cors import CORS
 from math import inf
-from copy import copy
+import copy
 import json
 import re
 
@@ -36,11 +36,20 @@ def grafoLimpo():
 def paths():
     return getPaths()
 
+@app.route("/graphMatrix/")
+def getGraphMatrix():
+    graph2 = Util.graph_from_file(Graph,dbTextFile)
+    graph2 = Util.removeInifinite(Graph, graph2)
+    response = {
+        "graph_matrix" : graph2
+    }
+    return response
+
 def getGraph(remove_infinite):
-    graph_matrix = copy(graph)
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
-    
-    # "graph_matrix" : graph_matrix
+    # graph2 = Util.graph_from_file(Graph,dbTextFile)
+    graph_matrix = copy.deepcopy(graph)
+    graph_matrix = Util.removeInifinite(Util, graph_matrix)
 
     response = {
         "graph": graphResp,
@@ -48,6 +57,7 @@ def getGraph(remove_infinite):
         "nodes" : nodes,
         "floyd" : floyd,
         "dist" : dist,     
+        "graph_matrix" : graph_matrix
     }
     return response
 

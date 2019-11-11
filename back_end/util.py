@@ -76,3 +76,11 @@ class Util:
             for j in range(size):
                 if matrix[i][j] == None:
                     matrix[i][j] = "null"
+
+    def removeInifinite(self, matrix):
+        size = len(matrix[0])
+        for i in range(size):
+            for j in range(size):
+                if matrix[i][j] == inf:
+                    matrix[i][j] = "null"
+        return matrix

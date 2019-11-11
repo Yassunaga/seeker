@@ -4,8 +4,8 @@
 
 <head>
     <title>seeker</title>
-    <script src="cythoscape.min.js"></script>
     <script src="jquery.min.js"></script>
+    <script src="cythoscape.min.js"></script>
 </head>
 
 <style>
@@ -133,11 +133,17 @@
             );
         }
 
+        function startSeeker(){
+
+        }
+
         jQuery.ajax({
             url: 'http://127.0.0.1:5000/graph/clean/',
             success: function (result) {
                 window.responseGraph = result.graph.arcList;
                 window.responseNodes = result.nodes;
+                window.graph_matrix = result.graph_matrix;
+                window.
                 window.responseElements = [];
                 window.policeCount = 0;
                 responseNodes.forEach(node => {
@@ -174,6 +180,7 @@
                         }
                     ]
                 });
+
                 initCriminal(1);
                 initPolice(2);
                 placeEdgeLabels();
