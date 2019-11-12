@@ -95,8 +95,53 @@
             });
         }
 
+        function turnOnNode(idNode1, idNode2, time, color){
+            cy.nodes('#' + idNode2).animate({
+                style: { backgroundColor: color }
+            }, {
+                duration: time
+            }
+            );
+        }        
+
+        function turnOffLine(idNode1, idNode2, time, color){
+            cy.edges('#' + idNode1 + '_' + idNode2).animate({
+                style: { 'line-color': "grey" }
+            }, {
+                duration: time
+            }, {
+                complete : turnOnNode(idNode1, idNode2, time, color)
+            }
+            );
+        }
+
+        function turnOnLine(idNode1, idNode2, time, color){
+            cy.edges('#' + idNode1 + '_' + idNode2).animate({
+                style: { 'line-color': color }
+            }, {
+                duration: time
+            }, {
+                complete : turnOffLine(idNode1, idNode2, time, color)
+            }
+            );
+        }
+
+        function turnOffNode(idNode1, idNode2, time, color){
+            cy.nodes('#' + idNode1).animate({
+                style: { backgroundColor: 'grey' }
+            }, {
+                duration: time
+            },{
+                complete : turnOnLine(idNode1,idNode2,time,color)
+            }
+            );
+        }
+
         function animateTransition(idNode1, idNode2, peso, type) {
-            var animDuration = peso * 500;
+            console.log(peso);
+            var animDuration = peso * 1000;
+            animationPartTime = animDuration/4;
+            
             var color = null;
             if (type == 'police') {
                 color = 'blue';
@@ -104,33 +149,8 @@
             else if (type == 'crim') {
                 color = 'red';
             }
-            cy.nodes('#' + idNode1).animate({
-                style: { backgroundColor: 'grey' }
-            }, {
-                duration: animDuration
-            }
-            );
-
-            cy.edges('#' + idNode1 + '_' + idNode2).animate({
-                style: { 'line-color': color }
-            }, {
-                duration: animDuration
-            }
-            );
-
-            cy.nodes('#' + idNode2).animate({
-                style: { backgroundColor: color }
-            }, {
-                duration: animDuration
-            }
-            );
-
-            cy.edges('#' + idNode1 + '_' + idNode2).animate({
-                style: { 'line-color': 'grey' }
-            }, {
-                duration: animDuration
-            }
-            );
+            console.log(animationPartTime);
+            turnOffNode(idNode1, idNode2, animationPartTime, color)
         }
 
         function createRandomMovement(actualPosition) {
@@ -148,15 +168,17 @@
                 do{
                     newPosition = createRandomMovement(criminal.position);
                 }while(newPosition == lastPosition);
-                console.log(actualPosition.toString() + '_' + newPosition.toString());
                 if (graph_matrix[actualPosition][newPosition] != 'null') {
-                    weight = graph_matrix[actualPosition[newPosition]];
+                    weight = graph_matrix[actualPosition][newPosition];
                 }
                 else if (graph_matrix[newPosition][actualPosition] != 'null') {
                     weight = graph_matrix[newPosition][actualPosition];
                 }
                 lastPosition = actualPosition;
                 criminal.position = newPosition;
+                console.log("Actual: " + actualPosition);
+                console.log("New " + newPosition);
+                console.log("Weight " + weight);
                 animateTransition(actualPosition, newPosition, weight, "crim")
             }
         }
@@ -208,6 +230,7 @@
                 });
 
                 initCriminal(1);
+                initPolice(2);
                 placeEdgeLabels();
                 moveCriminal();
                 //Inserir código a partir daqui
