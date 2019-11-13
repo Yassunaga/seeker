@@ -23,6 +23,8 @@
     <script>
         window.set = new Set();
         var lastPosition = -1;
+        var policeArray = [];
+
         function initCriminal(quantity) {
             if (isGraphFull()) {
                 return;
@@ -52,10 +54,11 @@
                 policeCount++;
                 position = getRandomPosition();
                 set.add(position);
-                window.police = {
+                var police = {
                     id: 'police' + policeCount.toString(),
                     position: position
                 }
+                policeArray.push(police);
                 console.log("Police position: " + position);
                 cy.style()
                     .selector('#' + position)
@@ -95,52 +98,49 @@
             });
         }
 
-        function turnOnNode(idNode1, idNode2, time, color){
+        function verifyIntercept(criminalPosition){
+            for(var i=0; i<policeArray.length; i++){
+                if(criminalPosition == policeArray[i].position){
+                    return;
+                }
+            }
+            moveCriminal();
+        }
+
+        function turnOffNode2(idNode1, idNode2, time, color){
+            cy.nodes('#' + idNode2).animate({
+                style: { backgroundColor: "grey" }
+            }, {
+                duration: time,
+                complete : verifyIntercept(idNode2)
+            }
+            );
+        }
+
+        function turnOnNode2(idNode1, idNode2, time, color){
             cy.nodes('#' + idNode2).animate({
                 style: { backgroundColor: color }
             }, {
-                duration: time
-            }
-            );
-        }        
-
-        function turnOffLine(idNode1, idNode2, time, color){
-            cy.edges('#' + idNode1 + '_' + idNode2).animate({
-                style: { 'line-color': "grey" }
-            }, {
-                duration: time
-            }, {
-                complete : turnOnNode(idNode1, idNode2, time, color)
+                duration: time,
+                complete : turnOffNode2(idNode1, idNode2, time, color)
             }
             );
         }
 
-        function turnOnLine(idNode1, idNode2, time, color){
-            cy.edges('#' + idNode1 + '_' + idNode2).animate({
-                style: { 'line-color': color }
-            }, {
-                duration: time
-            }, {
-                complete : turnOffLine(idNode1, idNode2, time, color)
-            }
-            );
-        }
-
-        function turnOffNode(idNode1, idNode2, time, color){
+        function turnOffNode1(idNode1, idNode2, time, color){
             cy.nodes('#' + idNode1).animate({
                 style: { backgroundColor: 'grey' }
             }, {
-                duration: time
-            },{
-                complete : turnOnLine(idNode1,idNode2,time,color)
+                duration: time,
+                complete : turnOnNode2(idNode1,idNode2,time,color)
             }
             );
         }
 
         function animateTransition(idNode1, idNode2, peso, type) {
             console.log(peso);
-            var animDuration = peso * 1000;
-            animationPartTime = animDuration/4;
+            var animDuration = peso * 500;
+            animationPartTime = animDuration/2;
             
             var color = null;
             if (type == 'police') {
@@ -150,7 +150,7 @@
                 color = 'red';
             }
             console.log(animationPartTime);
-            turnOffNode(idNode1, idNode2, animationPartTime, color)
+            turnOffNode1(idNode1, idNode2, animationPartTime, color)
         }
 
         function createRandomMovement(actualPosition) {
@@ -163,24 +163,22 @@
             var weight;
             var actualPosition;
             var newPosition;
-            for (var i = 0; i < 1; i++) {
-                actualPosition = criminal.position;
-                do{
-                    newPosition = createRandomMovement(criminal.position);
-                }while(newPosition == lastPosition);
-                if (graph_matrix[actualPosition][newPosition] != 'null') {
-                    weight = graph_matrix[actualPosition][newPosition];
-                }
-                else if (graph_matrix[newPosition][actualPosition] != 'null') {
-                    weight = graph_matrix[newPosition][actualPosition];
-                }
-                lastPosition = actualPosition;
-                criminal.position = newPosition;
-                console.log("Actual: " + actualPosition);
-                console.log("New " + newPosition);
-                console.log("Weight " + weight);
-                animateTransition(actualPosition, newPosition, weight, "crim")
+            actualPosition = criminal.position;
+            do{
+                newPosition = createRandomMovement(criminal.position);
+            }while(newPosition == lastPosition);
+            if (graph_matrix[actualPosition][newPosition] != 'null') {
+                weight = graph_matrix[actualPosition][newPosition];
             }
+            else if (graph_matrix[newPosition][actualPosition] != 'null') {
+                weight = graph_matrix[newPosition][actualPosition];
+            }
+            lastPosition = actualPosition;
+            criminal.position = newPosition;
+            console.log("Actual: " + actualPosition);
+            console.log("New " + newPosition);
+            console.log("Weight " + weight);
+            animateTransition(actualPosition, newPosition, weight, "crim")
         }
 
         jQuery.ajax({
