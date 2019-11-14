@@ -69,7 +69,7 @@
                     .selector('#' + position)
                     .style({
                         'background-color': 'blue'
-                    })
+                    }) 
                     .update();
             }
             console.log(policeCount);
@@ -106,6 +106,8 @@
         function verifyIntercept(criminalPosition) {
             for (var i = 0; i < policeArray.length; i++) {
                 if (criminalPosition == policeArray[i].position) {
+                    var anim = createAnimation(criminalPosition, 500, 'green');
+                    anim.play();
                     return false;
                 }
             }
@@ -180,18 +182,22 @@
             var actualPosition;
             var newPosition;
 
-            actualPosition = policeArray[0].position;
-            newPosition = floyd[actualPosition][criminal.position][0];
+            for(var i=0; i<policeArray.length; i++){
+                if(verifyIntercept(criminal.position)){
+                    actualPosition = policeArray[i].position;
+                    newPosition = floyd[actualPosition][criminal.position][0];
+                    
+                    if(graph_matrix[newPosition][actualPosition] != 'null'){
+                        weight = graph_matrix[newPosition][actualPosition];
+                    }else if(graph_matrix[actualPosition][newPosition] != 'null'){
+                        weight = graph_matrix[actualPosition][newPosition];
+                    }
 
-            if(graph_matrix[newPosition][actualPosition] != 'null'){
-                weight = graph_matrix[newPosition][actualPosition];
-            }else if(graph_matrix[actualPosition][newPosition] != 'null'){
-                weight = graph_matrix[actualPosition][newPosition];
+                    policeArray[i].position = newPosition;
+                    animateTransition(actualPosition, newPosition, weight, 'police')
+                    setTimeout(movePolice, weight * 500);
+                }
             }
-
-            policeArray[0].position = newPosition;
-            animateTransition(actualPosition, newPosition, weight, 'police')
-            setTimeout(movePolice, weight * 500);
         }
 
         function startSeeker() {
@@ -210,6 +216,13 @@
                 window.dist = result.dist;
                 window.responseElements = [];
                 window.policeCount = 0;
+                window.cityMapping = [];
+                for(var i=0;i<responseNodes.length; i++){
+                    cityMapping.push([]);
+                    for(var j=0; j<responseNodes.length; j++){
+                        cityMapping[i].push(0);
+                    }
+                }
                 responseNodes.forEach(node => {
                     responseElements.push(
                         {
