@@ -3,6 +3,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <title>seeker</title>
     <script src="jquery.min.js"></script>
     <script src="cythoscape.min.js"></script>
@@ -24,6 +25,10 @@
         window.set = new Set();
         var lastPosition = -1;
         var policeArray = [];
+
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
 
         function initCriminal(quantity) {
             if (isGraphFull()) {
@@ -98,50 +103,30 @@
             });
         }
 
-        function verifyIntercept(criminalPosition){
-            for(var i=0; i<policeArray.length; i++){
-                if(criminalPosition == policeArray[i].position){
-                    return;
+        function verifyIntercept(criminalPosition) {
+            for (var i = 0; i < policeArray.length; i++) {
+                if (criminalPosition == policeArray[i].position) {
+                    return false;
                 }
             }
-            moveCriminal();
+            return true;
         }
 
-        function turnOffNode2(idNode1, idNode2, time, color){
-            cy.nodes('#' + idNode2).animate({
-                style: { backgroundColor: "grey" }
+        function createAnimation(idNode, time, color) {
+            var animation = cy.$('#' + idNode).animation({
+                style: {
+                    backgroundColor: color,
+                }
             }, {
-                duration: time,
-                complete : verifyIntercept(idNode2)
-            }
-            );
-        }
-
-        function turnOnNode2(idNode1, idNode2, time, color){
-            cy.nodes('#' + idNode2).animate({
-                style: { backgroundColor: color }
-            }, {
-                duration: time,
-                complete : turnOffNode2(idNode1, idNode2, time, color)
-            }
-            );
-        }
-
-        function turnOffNode1(idNode1, idNode2, time, color){
-            cy.nodes('#' + idNode1).animate({
-                style: { backgroundColor: 'grey' }
-            }, {
-                duration: time,
-                complete : turnOnNode2(idNode1,idNode2,time,color)
-            }
-            );
+                duration: time
+            });
+            return animation;
         }
 
         function animateTransition(idNode1, idNode2, peso, type) {
-            console.log(peso);
             var animDuration = peso * 500;
-            animationPartTime = animDuration/2;
-            
+            animationPartTime = animDuration / 2;
+
             var color = null;
             if (type == 'police') {
                 color = 'blue';
@@ -150,7 +135,10 @@
                 color = 'red';
             }
             console.log(animationPartTime);
-            turnOffNode1(idNode1, idNode2, animationPartTime, color)
+            var turnOffAnimation = createAnimation(idNode1, animationPartTime, 'grey');
+            var turnOnAnimation = createAnimation(idNode2, animationPartTime, color);
+            turnOnAnimation.play();
+            turnOffAnimation.play();
         }
 
         function createRandomMovement(actualPosition) {
@@ -158,27 +146,57 @@
             return graph_list[actualPosition][newPosition];
         }
 
-        function moveCriminal() {
+        var moveCriminal = function () {
+            if (verifyIntercept(criminal.position)) {
+                var pos;
+                var weight;
+                var actualPosition;
+                var newPosition;
+                actualPosition = criminal.position;
+                do {
+                    newPosition = createRandomMovement(criminal.position);
+                } while (newPosition == lastPosition);
+                if (graph_matrix[actualPosition][newPosition] != 'null') {
+                    weight = graph_matrix[actualPosition][newPosition];
+                }
+                else if (graph_matrix[newPosition][actualPosition] != 'null') {
+                    weight = graph_matrix[newPosition][actualPosition];
+                }
+                lastPosition = actualPosition;
+                criminal.position = newPosition;
+
+                console.log("Actual: " + actualPosition);
+                console.log("New " + newPosition);
+                console.log("Weight " + weight);
+
+                animateTransition(actualPosition, newPosition, weight, "crim");
+                setTimeout(moveCriminal, weight * 500);
+            }
+        }
+
+        var movePolice = function () {
             var pos;
             var weight;
             var actualPosition;
             var newPosition;
-            actualPosition = criminal.position;
-            do{
-                newPosition = createRandomMovement(criminal.position);
-            }while(newPosition == lastPosition);
-            if (graph_matrix[actualPosition][newPosition] != 'null') {
+
+            actualPosition = policeArray[0].position;
+            newPosition = floyd[actualPosition][criminal.position][0];
+
+            if(graph_matrix[newPosition][actualPosition] != 'null'){
+                weight = graph_matrix[newPosition][actualPosition];
+            }else if(graph_matrix[actualPosition][newPosition] != 'null'){
                 weight = graph_matrix[actualPosition][newPosition];
             }
-            else if (graph_matrix[newPosition][actualPosition] != 'null') {
-                weight = graph_matrix[newPosition][actualPosition];
-            }
-            lastPosition = actualPosition;
-            criminal.position = newPosition;
-            console.log("Actual: " + actualPosition);
-            console.log("New " + newPosition);
-            console.log("Weight " + weight);
-            animateTransition(actualPosition, newPosition, weight, "crim")
+
+            policeArray[0].position = newPosition;
+            animateTransition(actualPosition, newPosition, weight, 'police')
+            setTimeout(movePolice, weight * 500);
+        }
+
+        function startSeeker() {
+            moveCriminal();
+            movePolice();
         }
 
         jQuery.ajax({
@@ -228,9 +246,9 @@
                 });
 
                 initCriminal(1);
-                initPolice(2);
+                initPolice(1);
                 placeEdgeLabels();
-                moveCriminal();
+                startSeeker();
                 //Inserir código a partir daqui
             }
         });
