@@ -7,6 +7,7 @@
     <title>seeker</title>
     <script src="jquery.min.js"></script>
     <script src="cythoscape.min.js"></script>
+    <script src="euler.js"></script>
 </head>
 
 <style>
@@ -26,10 +27,6 @@
         var lastPosition = -1;
         var policeArray = [];
 
-        const sleep = (milliseconds) => {
-            return new Promise(resolve => setTimeout(resolve, milliseconds))
-        }
-
         function initCriminal(quantity) {
             if (isGraphFull()) {
                 return;
@@ -41,7 +38,7 @@
                     id: 'crim',
                     position: position
                 }
-                console.log("Criminal position: " + position);
+                nodePopulation[position] = 2;
                 cy.style()
                     .selector('#' + position)
                     .style({
@@ -64,7 +61,7 @@
                     position: position
                 }
                 policeArray.push(police);
-                console.log("Police position: " + position);
+                nodePopulation[position] = 1;
                 cy.style()
                     .selector('#' + position)
                     .style({
@@ -72,7 +69,6 @@
                     }) 
                     .update();
             }
-            console.log(policeCount);
         }
         function getRandomPosition() {
             var position;
@@ -98,7 +94,9 @@
                 cy.style()
                     .selector(edge_id)
                     .style({
-                        'label': edge.weight.toString()
+                        'label': edge.weight.toString(),
+                        'font-size' : 8,
+                        width : 1.5,
                     }).update();
             });
         }
@@ -106,7 +104,7 @@
         function verifyIntercept(criminalPosition) {
             for (var i = 0; i < policeArray.length; i++) {
                 if (criminalPosition == policeArray[i].position) {
-                    var anim = createAnimation(criminalPosition, 500, 'green');
+                    var anim = createNodeAnimation(criminalPosition, 500, 'green');
                     anim.play();
                     return false;
                 }
@@ -114,7 +112,7 @@
             return true;
         }
 
-        function createAnimation(idNode, time, color) {
+        function createNodeAnimation(idNode, time, color) {
             var animation = cy.$('#' + idNode).animation({
                 style: {
                     backgroundColor: color,
@@ -123,6 +121,16 @@
                 duration: time
             });
             return animation;
+        }
+
+        function createEdgeAnimation(idNode1, idNode2, time, color){
+            var jAni = cy.$('#' + idNode1.toString() + '_' + idNode2.toString()).animation({
+                style: {
+                    'line-color': 'red',
+                },
+                duration: time
+            });
+            return jAni;
         }
 
         function animateTransition(idNode1, idNode2, peso, type) {
@@ -136,9 +144,8 @@
             else if (type == 'crim') {
                 color = 'red';
             }
-            console.log(animationPartTime);
-            var turnOffAnimation = createAnimation(idNode1, animationPartTime, 'grey');
-            var turnOnAnimation = createAnimation(idNode2, animationPartTime, color);
+            var turnOffAnimation = createNodeAnimation(idNode1, animationPartTime, 'grey');
+            var turnOnAnimation = createNodeAnimation(idNode2, animationPartTime, color);
             turnOnAnimation.play();
             turnOffAnimation.play();
         }
@@ -148,7 +155,7 @@
             return graph_list[actualPosition][newPosition];
         }
 
-        var moveCriminal = function () {
+        function moveCriminal() {
             if (verifyIntercept(criminal.position)) {
                 var pos;
                 var weight;
@@ -167,6 +174,9 @@
                 lastPosition = actualPosition;
                 criminal.position = newPosition;
 
+                nodePopulation[newPosition] = 2;
+                nodePopulation[actualPosition] = 0;
+
                 console.log("Actual: " + actualPosition);
                 console.log("New " + newPosition);
                 console.log("Weight " + weight);
@@ -176,33 +186,43 @@
             }
         }
 
-        var movePolice = function () {
+        function movePolice(id) {
             var pos;
             var weight;
             var actualPosition;
             var newPosition;
 
-            for(var i=0; i<policeArray.length; i++){
-                if(verifyIntercept(criminal.position)){
-                    actualPosition = policeArray[i].position;
-                    newPosition = floyd[actualPosition][criminal.position][0];
-                    
-                    if(graph_matrix[newPosition][actualPosition] != 'null'){
-                        weight = graph_matrix[newPosition][actualPosition];
-                    }else if(graph_matrix[actualPosition][newPosition] != 'null'){
-                        weight = graph_matrix[actualPosition][newPosition];
-                    }
-
-                    policeArray[i].position = newPosition;
-                    animateTransition(actualPosition, newPosition, weight, 'police')
-                    setTimeout(movePolice, weight * 500);
+            if(verifyIntercept(criminal.position)){
+                actualPosition = policeArray[id].position;
+                newPosition = floyd[actualPosition][criminal.position][0];
+                
+                if(nodePopulation[newPosition] == 1){
+                    do{
+                        newPosition = createRandomMovement(actualPosition);
+                    }while(nodePopulation[newPosition] == 1);
                 }
+
+                if(graph_matrix[newPosition][actualPosition] != 'null'){
+                    weight = graph_matrix[newPosition][actualPosition];
+                }else if(graph_matrix[actualPosition][newPosition] != 'null'){
+                    weight = graph_matrix[actualPosition][newPosition];
+                }
+
+                policeArray[id].position = newPosition;
+                nodePopulation[newPosition] = 1;
+                nodePopulation[actualPosition] = 0;
+
+                animateTransition(actualPosition, newPosition, weight, 'police')
+                setTimeout(movePolice, weight * 500, id);
+                console.log(id);
             }
         }
 
         function startSeeker() {
             moveCriminal();
-            movePolice();
+            for(var i=0; i<policeArray.length; i++){
+                movePolice(i);
+            }
         }
 
         jQuery.ajax({
@@ -216,19 +236,14 @@
                 window.dist = result.dist;
                 window.responseElements = [];
                 window.policeCount = 0;
-                window.cityMapping = [];
-                for(var i=0;i<responseNodes.length; i++){
-                    cityMapping.push([]);
-                    for(var j=0; j<responseNodes.length; j++){
-                        cityMapping[i].push(0);
-                    }
-                }
+                window.nodePopulation = [];
                 responseNodes.forEach(node => {
                     responseElements.push(
                         {
                             data: { id: node.toString() }
                         }
                     );
+                    nodePopulation.push(0);
                 });
                 responseGraph.forEach(edge => {
                     if (edge.begin != edge.end) {
@@ -247,19 +262,28 @@
                 window.cy = cytoscape({
                     container: document.getElementById('cy'),
                     elements: responseElements,
+                    layout : {
+                        name : 'euler',
+                        randomize : true,
+                        animate : false,
+                    },
                     style: [
                         {
                             selector: 'node',
                             style: {
                                 'label': 'data(id)',
                                 shape: 'ellipse',
-                            },
+                                width : 10,
+                                height : 10,
+                                'font-size' : 7
+                            }
                         }
                     ]
+                    
                 });
 
                 initCriminal(1);
-                initPolice(1);
+                initPolice(3);
                 placeEdgeLabels();
                 startSeeker();
                 //Inserir código a partir daqui

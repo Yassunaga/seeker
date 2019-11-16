@@ -36,15 +36,6 @@ def grafoLimpo():
 def paths():
     return getPaths()
 
-@app.route("/graphMatrix/")
-def getGraphMatrix():
-    graph2 = Util.graph_from_file(Graph,dbTextFile)
-    graph2 = Util.removeInifinite(Graph, graph2)
-    response = {
-        "graph_matrix" : graph2
-    }
-    return response
-
 def getGraph(remove_infinite):
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
     # graph2 = Util.graph_from_file(Graph,dbTextFile)
