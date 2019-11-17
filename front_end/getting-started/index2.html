@@ -197,9 +197,33 @@
                 newPosition = floyd[actualPosition][criminal.position][0];
                 
                 if(nodePopulation[newPosition] == 1){
+                    var options = graph_list[actualPosition];
+                    var adjacentDistances = [];
+                    options.forEach(
+                        (element) => {
+                            adjacentDistances.push({
+                                [element] : dist[element][criminal.position]
+                            });
+                        }
+                    );
+                    adjacentDistances.sort(
+                        (a,b) => {
+                            let keyA = Object.keys(a);
+                            let keyB = Object.keys(b);
+                            return a[keyA] - b[keyB];
+                        }
+                    );
+                    var notFound = true;
                     do{
-                        newPosition = createRandomMovement(actualPosition);
-                    }while(nodePopulation[newPosition] == 1);
+                        newPosition = Number(Object.keys(adjacentDistances.shift())[0]);
+                        if(nodePopulation[newPosition] == 0){
+                            notFound = false;
+                            break;
+                        }
+                    }while(adjacentDistances.length > 0);
+                    if(notFound){
+                        newPosition = actualPosition;
+                    }
                 }
 
                 if(graph_matrix[newPosition][actualPosition] != 'null'){
@@ -209,9 +233,10 @@
                 }
 
                 policeArray[id].position = newPosition;
-                nodePopulation[newPosition] = 1;
-                nodePopulation[actualPosition] = 0;
-
+                if(actualPosition != newPosition){
+                    nodePopulation[newPosition] = 1;
+                    nodePopulation[actualPosition] = 0;
+                }
                 animateTransition(actualPosition, newPosition, weight, 'police')
                 setTimeout(movePolice, weight * 500, id);
                 console.log(id);
@@ -283,7 +308,7 @@
                 });
 
                 initCriminal(1);
-                initPolice(3);
+                initPolice(2);
                 placeEdgeLabels();
                 startSeeker();
                 //Inserir código a partir daqui

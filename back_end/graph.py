@@ -40,7 +40,6 @@ class Graph:
                     continue
                 elif matrix_graph[i][j] > 0:
                     graph_list[i].append(j)
-                    graph_list[j].append(i)
         return graph_list
 
     # Create a graph NxN according to size

@@ -47,7 +47,7 @@ def getGraph(remove_infinite):
         "graph_list" : graph_list,
         "nodes" : nodes,
         "floyd" : floyd,
-        "dist" : dist,     
+        "dist" : dist,
         "graph_matrix" : graph_matrix
     }
     return response
