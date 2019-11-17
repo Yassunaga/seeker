@@ -124,13 +124,14 @@
         }
 
         function createEdgeAnimation(idNode1, idNode2, time, color){
-            var jAni = cy.$('#' + idNode1.toString() + '_' + idNode2.toString()).animation({
+            var animation = cy.$('#' + idNode1.toString() + '_' + idNode2.toString()).animation({
                 style: {
-                    'line-color': 'red',
+                    'line-color': color.toString(),
                 },
                 duration: time
             });
-            return jAni;
+            animation.play();
+            return animation;
         }
 
         function animateTransition(idNode1, idNode2, peso, type) {
@@ -165,6 +166,10 @@
                 do {
                     newPosition = createRandomMovement(criminal.position);
                 } while (newPosition == lastPosition);
+                // if(lastPosition != -1){
+                //     createEdgeAnimation(actualPosition,lastPosition,500,'grey');
+                //     createEdgeAnimation(lastPosition,actualPosition,500,'grey');
+                // }
                 if (graph_matrix[actualPosition][newPosition] != 'null') {
                     weight = graph_matrix[actualPosition][newPosition];
                 }
@@ -180,8 +185,10 @@
                 console.log("Actual: " + actualPosition);
                 console.log("New " + newPosition);
                 console.log("Weight " + weight);
-
+                
                 animateTransition(actualPosition, newPosition, weight, "crim");
+                createEdgeAnimation(actualPosition,newPosition,500,'red');
+                createEdgeAnimation(newPosition,actualPosition,500,'red');
                 setTimeout(moveCriminal, weight * 500);
             }
         }
@@ -237,9 +244,10 @@
                     nodePopulation[newPosition] = 1;
                     nodePopulation[actualPosition] = 0;
                 }
-                animateTransition(actualPosition, newPosition, weight, 'police')
+                animateTransition(actualPosition, newPosition, weight, 'police');
+                createEdgeAnimation(actualPosition,newPosition,500,'blue');
+                createEdgeAnimation(newPosition,actualPosition,500,'blue');
                 setTimeout(movePolice, weight * 500, id);
-                console.log(id);
             }
         }
 
