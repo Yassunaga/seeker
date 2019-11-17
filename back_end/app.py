@@ -11,7 +11,7 @@ import json
 import re
 
 # Graph in text file
-dbTextFile = "inputGraph.txt"
+dbTextFile = "gridGraph.txt"
 
 #Pre-processing
 graph = Util.graph_from_file(Graph, dbTextFile)

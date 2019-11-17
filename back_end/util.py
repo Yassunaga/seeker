@@ -22,7 +22,7 @@ class Util:
     def paths_from_file(self, file_name):
         with open(file_name, "r") as file:
             lines = file.readlines()
-        path = Util.lines_to_path_matrix(Util, lines)
+        path = Util.lines_to_path_matrix(Util, lines, file_name)
         return path
 
     def lines_to_graph_matrix(self, readed_lines):
@@ -42,7 +42,7 @@ class Util:
                     grafo[i].append(int(element))
         return grafo
     
-    def lines_to_path_matrix(self, readed_lines):
+    def lines_to_path_matrix(self, readed_lines, file_name):
         lines = []
         for i in readed_lines:
             lines.append(i.split())
@@ -55,8 +55,7 @@ class Util:
                     path[i].append(0)
                 else:
                     path[i].append(None)
-        # print(path)
-        graph = Util.graph_from_file(Util, "inputGraph.txt")
+        graph = Util.graph_from_file(Util, file_name)
         for i in range(size):
             for j, element in enumerate(lines[i]):
                 if element != 'inf' and i != j:
