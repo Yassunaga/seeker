@@ -3,7 +3,7 @@
 inf 5 0 5 inf inf inf inf inf inf inf
 inf inf 5 0 5 inf inf inf inf inf inf
 inf inf inf 5 0 5 inf inf inf inf inf
-inf inf inf inf 5 0 5 inf inf inf inf
+5 inf inf inf 5 0 5 inf inf inf inf
 inf inf inf inf inf 5 0 5 inf inf inf
 inf inf inf inf inf inf 5 0 5 inf inf
 inf inf inf inf inf inf inf 5 0 5 inf
