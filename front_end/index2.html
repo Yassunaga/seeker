@@ -110,7 +110,7 @@
         function verifyIntercept(criminalPosition) {
             for (var i = 0; i < policeArray.length; i++) {
                 if (criminalPosition == policeArray[i].position) {
-                    var anim = createNodeAnimation(criminalPosition, 500, 'green');
+                    var anim = createNodeAnimation(criminalPosition, 500, 'green', false);
                     anim.play();
                     return false;
                 }
@@ -118,10 +118,18 @@
             return true;
         }
 
-        function createNodeAnimation(idNode, time, color) {
+        function createNodeAnimation(idNode, time, color, leaving) {
+            var tam;
+            if(leaving == true){
+                tam = 10;
+            }else{
+                tam = 12;
+            }
             var animation = cy.$('#' + idNode).animation({
                 style: {
                     backgroundColor: color,
+                    width : tam,
+                    height : tam
                 }
             }, {
                 duration: time
@@ -151,8 +159,8 @@
             else if (type == 'crim') {
                 color = 'red';
             }
-            var turnOffAnimation = createNodeAnimation(idNode1, animationPartTime, 'grey');
-            var turnOnAnimation = createNodeAnimation(idNode2, animationPartTime, color);
+            var turnOffAnimation = createNodeAnimation(idNode1, animationPartTime, 'grey', true);
+            var turnOnAnimation = createNodeAnimation(idNode2, animationPartTime, color, false);
             turnOnAnimation.play();
             turnOffAnimation.play();
         }
