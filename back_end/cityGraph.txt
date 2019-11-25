@@ -1,11 +1,31 @@
-0 5 inf inf inf 5 inf inf inf inf 5
-5 0 5 inf inf inf inf inf inf inf inf
-inf 5 0 5 inf inf inf inf inf inf inf
-inf inf 5 0 5 inf inf inf inf inf inf
-inf inf inf 5 0 5 inf inf inf inf inf
-inf inf inf inf 5 0 5 inf inf inf inf
-inf inf inf inf inf 5 0 5 inf inf inf
-inf inf inf inf inf inf 5 0 5 inf inf
-inf inf inf inf inf inf inf 5 0 5 inf
-inf inf inf inf inf inf inf inf 5 0 5 
-5 inf inf inf inf inf inf inf inf 5 0
+0 inf inf 1 inf inf inf inf inf 3 inf inf inf 8 inf inf inf inf inf 2 inf inf inf inf inf 1 inf inf inf inf inf
+inf 0 inf inf 6 inf inf inf inf inf inf inf inf inf inf inf inf 2 8 inf 7 inf inf inf inf inf inf inf inf inf inf
+inf inf 0 inf 4 inf inf inf inf inf inf 4 inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+1 inf inf 0 inf 9 inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf 9 inf inf inf
+inf 6 4 inf 0 inf inf 6 7 inf inf inf inf inf inf inf inf inf inf inf inf 8 inf inf inf inf inf inf inf inf inf
+inf inf inf 9 inf 0 inf inf inf inf inf inf inf inf inf inf inf 3 inf inf inf 2 inf inf inf inf inf inf inf inf inf
+inf inf inf inf inf inf 0 inf inf inf inf inf inf inf inf 1 inf inf 8 inf inf inf inf inf inf inf inf 5 inf inf inf
+inf inf inf inf 6 inf inf 0 inf inf inf inf inf inf inf inf inf inf inf inf inf 8 inf inf 8 inf inf inf inf inf inf
+inf inf inf inf 7 inf inf inf 0 inf inf 2 inf inf inf inf 10 inf inf inf inf inf 1 inf inf inf inf inf inf 8 inf
+3 inf inf inf inf inf inf inf inf 0 inf inf inf inf inf 2 inf inf inf 10 inf inf inf inf inf inf inf 3 inf inf inf
+inf inf inf inf inf inf inf inf inf inf 0 inf inf inf inf inf inf 2 inf inf 5 inf inf inf inf inf inf 6 inf inf inf
+inf inf 4 inf inf inf inf inf 2 inf inf 0 inf inf 3 inf inf inf inf inf 4 9 inf 10 inf inf inf inf inf inf inf
+inf inf inf inf inf inf inf inf inf inf inf inf 0 inf inf inf inf inf inf inf inf inf inf inf 10 1 inf inf 7 10 3
+8 inf inf inf inf inf inf inf inf inf inf inf inf 0 inf inf inf inf inf inf 1 inf inf inf inf inf inf inf inf inf 7
+inf inf inf inf inf inf inf inf inf inf inf 3 inf inf 0 inf inf inf inf inf inf 1 inf inf inf inf 2 inf inf inf inf
+inf inf inf inf inf inf 1 inf inf 2 inf inf inf inf inf 0 inf inf inf inf inf inf inf inf 8 inf inf inf inf inf inf
+inf inf inf inf inf inf inf inf 10 inf inf inf inf inf inf inf 0 inf inf 5 inf inf inf inf inf 9 10 inf inf inf inf
+inf 2 inf inf inf 3 inf inf inf inf 2 inf inf inf inf inf inf 0 inf inf inf inf 5 inf inf 3 inf inf inf inf inf
+inf 8 inf inf inf inf 8 inf inf inf inf inf inf inf inf inf inf inf 0 inf inf inf inf 1 inf inf inf inf inf inf inf
+2 inf inf inf inf inf inf inf inf 10 inf inf inf inf inf inf 5 inf inf 0 inf inf inf inf inf inf inf 5 inf 9 inf
+inf 7 inf inf inf inf inf inf inf inf 5 4 inf 1 inf inf inf inf inf inf 0 inf inf inf inf inf inf inf inf inf inf
+inf inf inf inf 8 2 inf 8 inf inf inf 9 inf inf 1 inf inf inf inf inf inf 0 inf inf inf inf 2 inf inf inf inf
+inf inf inf inf inf inf inf inf 1 inf inf inf inf inf inf inf inf 5 inf inf inf inf 0 inf 3 inf inf inf inf inf inf
+inf inf inf inf inf inf inf inf inf inf inf 10 inf inf inf inf inf inf 1 inf inf inf inf 0 inf inf 2 inf inf inf 6
+inf inf inf inf inf inf inf 8 inf inf inf inf 10 inf inf 8 inf inf inf inf inf inf 3 inf 0 inf 9 inf inf inf inf
+1 inf inf inf inf inf inf inf inf inf inf inf 1 inf inf inf 9 3 inf inf inf inf inf inf inf 0 inf 10 inf inf inf
+inf inf inf inf inf inf inf inf inf inf inf inf inf inf 2 inf 10 inf inf inf inf 2 inf 2 9 inf 0 inf inf inf inf
+inf inf inf 9 inf inf 5 inf inf 3 6 inf inf inf inf inf inf inf inf 5 inf inf inf inf inf 10 inf 0 2 inf inf
+inf inf inf inf inf inf inf inf inf inf inf inf 7 inf inf inf inf inf inf inf inf inf inf inf inf inf inf 2 0 inf inf
+inf inf inf inf inf inf inf inf 8 inf inf inf 10 inf inf inf inf inf inf 9 inf inf inf inf inf inf inf inf inf 0 inf
+inf inf inf inf inf inf inf inf inf inf inf inf 3 7 inf inf inf inf inf inf inf inf inf 6 inf inf inf inf inf inf 0
