@@ -11,7 +11,7 @@ import json
 import re
 
 # Graph in text file
-dbTextFile = "circleGraph.txt"
+dbTextFile = "gridGraph.txt"
 
 #Pre-processing
 graph = Util.graph_from_file(Graph, dbTextFile)
@@ -38,7 +38,6 @@ def paths():
 
 def getGraph(remove_infinite):
     graphResp = Graph.matrix_to_object(graph,remove_infinite)
-    # graph2 = Util.graph_from_file(Graph,dbTextFile)
     graph_matrix = copy.deepcopy(graph)
     graph_matrix = Util.removeInifinite(Util, graph_matrix)
 

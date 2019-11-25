@@ -34,6 +34,7 @@
             while (quantity > 0) {
                 quantity--;
                 var position = getRandomPosition();
+                // var position = 12;
                 window.criminal = {
                     id: 'crim',
                     position: position
@@ -54,6 +55,11 @@
             while (quantity > 0) {
                 quantity--;
                 policeCount++;
+                // if(policeCount == 0){
+                //     position = 7;
+                // }else{
+                //     position = 2;
+                // }
                 position = getRandomPosition();
                 set.add(position);
                 var police = {
@@ -164,11 +170,11 @@
                 var newPosition;
                 actualPosition = criminal.position;
                 
-                // var options = graph_list[actualPosition];
+                var options = graph_list[actualPosition];
                 // do{
                 //     newPosition = Number(Object.keys(options.pop())[0]);
                 // }while(newPosition == lastPosition);
-                var options = graph_list[actualPosition];
+                
                 console.log(options)
                 do {
                     newPosition = createRandomMovement(criminal.position);
